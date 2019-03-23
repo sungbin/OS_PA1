@@ -1,7 +1,12 @@
+#include <linux/sycalls.h>
 #include <linux/module.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 #include <linux/uaccess.h>
+#include <linux/kallsyms.h>
+#include <linux/init.h>
+#include <linux/kernel.h>
+#include <asm/unistd.h>
 
 MODULE_LICENSE("GPL");
 
