@@ -6,38 +6,36 @@ int select(); // files, protect, hide, status, exit, others(help)
 int main() {
 	int type;
 	char pid[50] = "";
-	type = select();
-	const char* PROC_PATH = "/proc/mexe";
-
-	switch(type) {
-	case 1: {
-		printf("1 is executed\n");
-		break;
-	}
-	case 2: {
-		printf("pid: ");
-		scanf("%s",pid);
-		FILE *fp = fopen(PROC_PATH, "w");
-		fputs(pid, fp);
-		fclose(fp);
-		break;
-	}
-	case 3: {
-		
-		break;
-	}
-	case 4: {
-
-		break;
-	}
-	case 5: {
-		printf("current protected pid: %s\n",pid);
-		break;
-	}
-	default: {
-	
-		break;
-	} }
+    const char* PROC_PATH = "/proc/mexe";
+    while(1) {
+        type = select();
+        if(type == 5) break;
+        switch(type) {
+        case 1: {
+            printf("1 is executed\n");
+            break;
+        }
+        case 2: {
+            printf("pid: ");
+            scanf("%s",pid);
+            FILE *fp = fopen(PROC_PATH, "w");
+            fputs(pid, fp);
+            fclose(fp);
+            break;
+        }
+        case 3: {
+            
+            break;
+        }
+        case 4: {
+            printf("current protected pid: %s\n",pid);
+            break;
+        }
+        default: {
+        
+            break;
+        } }
+    }
 	
 	return 0;
 }
