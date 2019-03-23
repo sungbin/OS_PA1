@@ -15,9 +15,8 @@ int m_num=0;
 void ** sctable ;
 
 asmlinkage int (*orig_sys_kill)(pid_t pid, int signal) ;
-
-asmiinkage int m_sys_kill(pid_t pid, int signal) {
-	if(m_num == (int) pid)
+asmlinkage int m_sys_kill(pid_t pid, int signal) {
+	if(m_num == ((int) pid))
 		return -1;
 	return orig_sys_kill(pid,signal);
 }
