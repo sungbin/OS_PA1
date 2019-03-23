@@ -3,16 +3,16 @@
 #include <string.h>
 #define _CRT_SECURE_NO_WARNINGS
 
-int select(); // files, protect, hide, status, exit, others(help)
+int mselect(); // files, protect, hide, status, exit, others(help)
 int main() {
 	int type;
 	char pid[50] = "";
     const char* PROC_PATH = "/proc/mexe";
 //      const char* PROC_PATH = "/Users/imseongbin/OneDrive - handong.edu/19-1/OS/OS_PA1/PA1/program/example";
-    const char* command_echo1 = "echo ";
+    const char* command_echo1 = "exec echo ";
     const char* command_echo2 = " > /proc/mexe";
     while(1) {
-        type = select();
+        type = mselect();
         char command[70] = "";
         if(type == 5) break;
         switch(type) {
@@ -26,6 +26,8 @@ int main() {
             strcat(command,command_echo1);
             strcat(command,pid);
             strcat(command,command_echo2);
+	    printf("%s\n",command);
+
             system(command); //execute echo command
             break;
         }
@@ -46,7 +48,7 @@ int main() {
 	return 0;
 }
 
-int select() {
+int mselect() {
 	printf("Enter: ");
 	int type;
 	char in[128] = "";
