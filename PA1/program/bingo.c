@@ -4,19 +4,21 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 int mselect(); // files, protect, hide, status, exit, others(help)
+void print_help();
 int main() {
 	int type;
 	char pid[50] = "";
-    const char* PROC_PATH = "/proc/mexe";
+//    const char* PROC_PATH = "/proc/mexe";
     const char* command_echo1 = "exec echo ";
     const char* command_echo2 = " > /proc/mexe";
+    bool hiding = false;
     while(1) {
         type = mselect();
         char command[70] = "";
         if(type == 5) break;
         switch(type) {
         case 1: {
-            printf("1 is executed\n");
+            printf("TODO:\n\n");
             break;
         }
         case 2: {
@@ -25,21 +27,31 @@ int main() {
             strcat(command,command_echo1);
             strcat(command,pid);
             strcat(command,command_echo2);
-	    printf("%s\n",command);
+//            printf("%s\n",command);
 
             system(command); //execute echo command
             break;
         }
         case 3: {
-            
+            if(hiding) {
+                printf("hiding: on -> off\n");
+            } else {
+                printf("hiding: off -> on!\n");
+            }
+            strcat(command,command_echo1);
+            strcat(command,"o");
+            strcat(command,command_echo2);
+            system(command);
+            hiding = !hiding;
             break;
         }
         case 4: {
-            printf("current protected pid: %s\n",pid);
+            printf("protected pid: %s\n",pid);
+            printf("hiding : %s\n", hiding? "true" : "false");
             break;
         }
         default: {
-        
+            print_help();
             break;
         } }
     }
@@ -65,4 +77,12 @@ int mselect() {
 	else
 		return -1;
 	return -1;
+}
+void print_help() {
+    printf("#####Options#####\n");
+    printf("files\n");
+    printf("hide\n");
+    printf("status\n");
+    printf("exit\n");
+    printf("################\n\n");
 }
