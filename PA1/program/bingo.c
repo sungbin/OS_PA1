@@ -81,6 +81,7 @@ int mselect() {
 void print_help() {
     printf("#####Options#####\n");
     printf("files\n");
+    printf("protect\n");
     printf("hide\n");
     printf("status\n");
     printf("exit\n");
