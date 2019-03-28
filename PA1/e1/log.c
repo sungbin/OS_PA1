@@ -18,7 +18,7 @@ char logfile[10][128];
 
 asmlinkage int (*orig_sys_open)(const char __user * filename, int flags, umode_t mode) ; 
 
-asmlinkage int m_open(const char __user * filename, int flags, umode_t mode)
+asmlinkage int m_sys_open(const char __user * filename, int flags, umode_t mode)
 {
 	char fname[256] ;
 	int input_user = current_uid().val;
@@ -47,7 +47,7 @@ ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset
 {
 	/* TODO: */
 	char buf[256] ;
-	ssize_t toread 
+	ssize_t toread ;
 	toread = strlen(buf) >= *offset + size ? size : strlen(buf) - *offset ;
 
 	if (copy_to_user(ubuf, buf + *offset, toread))
