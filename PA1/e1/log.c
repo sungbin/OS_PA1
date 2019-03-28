@@ -35,6 +35,10 @@ asmlinkage int m_sys_open(const char __user * filename, int flags, umode_t mode)
 	return orig_sys_open(filename, flags, mode) ;
 }
 
+static 
+int m_open(struct inode *inode, struct file *file) {
+	return 0 ;
+}
 
 static 
 int m_release(struct inode *inode, struct file *file) {
@@ -67,7 +71,7 @@ ssize_t m_write(struct file *file, const char __user *ubuf, size_t size, loff_t 
 
 static const struct file_operations m_fops = {
 	.owner = 	THIS_MODULE,
-	.open = 	m_sys_open,
+	.open = 	m_open,
 	.read = 	m_read,
 	.write = 	m_write,
 	.llseek = 	seq_lseek,
