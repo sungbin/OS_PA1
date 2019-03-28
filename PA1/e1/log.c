@@ -25,7 +25,6 @@ asmlinkage int m_sys_open(const char __user * filename, int flags, umode_t mode)
 	int i = 0;
 	copy_from_user(fname, filename, 256) ;
 	
-	printk("input_user: %d\n",input_user);
 
 	/* TODO: */
 	if (specified_Id == input_user) {
@@ -49,7 +48,6 @@ int m_release(struct inode *inode, struct file *file) {
 static
 ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset) 
 {
-	sprintf(buf, "current_uid().val: %d\n",((int)current_uid().val));
 	/* TODO: */
 	char buf[256] ;
 	ssize_t toread ;
@@ -59,6 +57,8 @@ ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset
 		return -EFAULT ;	
 
 	*offset = *offset + toread ;
+	
+	sprintf(buf, "current_uid().val: %d\n",((int)current_uid().val
 
 	return toread ;
 }
