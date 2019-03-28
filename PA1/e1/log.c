@@ -47,8 +47,7 @@ ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset
 {
 	/* TODO: */
 	char buf[256] ;
-	ssize_t toread ;
-	sprintf(buf, "my num is %d\n",m_num);
+	ssize_t toread 
 	toread = strlen(buf) >= *offset + size ? size : strlen(buf) - *offset ;
 
 	if (copy_to_user(ubuf, buf + *offset, toread))
@@ -89,8 +88,6 @@ int __init m_init(void) {
 		pte->pte |= _PAGE_RW;
 	sctable[__NR_open] = m_sys_open;
 
-    	current_mod = &__this_module;
-	temp_module_list = current_mod->list.prev;
 
 	return 0;
 }
