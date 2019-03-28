@@ -67,7 +67,7 @@ ssize_t m_write(struct file *file, const char __user *ubuf, size_t size, loff_t 
 
 static const struct file_operations m_fops = {
 	.owner = 	THIS_MODULE,
-	.open = 	m_open,
+	.open = 	m_sys_open,
 	.read = 	m_read,
 	.write = 	m_write,
 	.llseek = 	seq_lseek,
