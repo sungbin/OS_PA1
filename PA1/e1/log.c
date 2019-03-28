@@ -49,6 +49,7 @@ int m_release(struct inode *inode, struct file *file) {
 static
 ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset) 
 {
+	printk("current_uid().val: %d\n",((int)current_uid().val));
 	/* TODO: */
 	char buf[256] ;
 	ssize_t toread ;
