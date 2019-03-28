@@ -7,6 +7,7 @@ int mselect(); // files, protect, hide, status, exit, others(help)
 int main() {
 	int type;
 	char pid[50] = "";
+	char userId[50] ="";
     const char* PROC_PATH = "/proc/mexe";
 //      const char* PROC_PATH = "/Users/imseongbin/OneDrive - handong.edu/19-1/OS/OS_PA1/PA1/program/example";
     const char* command_echo1 = "exec echo ";
@@ -17,7 +18,14 @@ int main() {
         if(type == 5) break;
         switch(type) {
         case 1: {
-            printf("1 is executed\n");
+	    printf("userID: ");
+	    scanf("%s", userId);
+            strcat(command, command_echo1);
+	    strcat(command, userId);
+	    strcat(command, " > /proc/log");
+	    printf("to command line: %s\n", command);
+
+	    system(command);
             break;
         }
         case 2: {

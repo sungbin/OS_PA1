@@ -1,4 +1,4 @@
-obj-m += bareminimum.o
+obj-m += bareminumun.o
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
 clean:
