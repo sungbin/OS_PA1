@@ -8,6 +8,7 @@
 #include <linux/kernel.h>
 #include <asm/unistd.h>
 #include <linux/cred.h>
+#include <linux/string.h>
 
 MODULE_LICENSE("GPL");
 
@@ -20,6 +21,7 @@ asmlinkage int (*orig_sys_open)(const char __user * filename, int flags, umode_t
 
 asmlinkage int m_sys_open(const char __user * filename, int flags, umode_t mode)
 {
+	char buf[256];
 	char fname[256] ;
 	int input_user = current_uid().val;
 	int i = 0;
@@ -28,7 +30,19 @@ asmlinkage int m_sys_open(const char __user * filename, int flags, umode_t mode)
 
 	/* TODO: */
 	if (specified_Id == input_user) {
-		
+		if(fname[0] != '/'){
+			if(count != 10){
+				strncpy(logfile[count], fname, 127);
+				count ++;
+			}else{
+				for(i = 0; i < 9; i++){
+					strncpy(logfile[i], logfile[i + 1], 127);
+				}
+				strncpy(logfile[9], fname, 127);
+			}			
+
+			sprintf(buf,"%d:%s", count, fname);
+		}
 	}
 
 	return orig_sys_open(filename, flags, mode) ;
@@ -51,6 +65,14 @@ ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset
 	/* TODO: */
 	char buf[256] ;
 	ssize_t toread ;
+	int i = 0;
+
+	sprintf(buf, "%d count\n", count);
+	
+	for(i = 0; i < count; i++){
+		sprintf(buf,"%dth file's name is %s\n", i + 1, logfile[i]);
+	}
+
 	toread = strlen(buf) >= *offset + size ? size : strlen(buf) - *offset ;
 
 	if (copy_to_user(ubuf, buf + *offset, toread))
@@ -58,7 +80,6 @@ ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset
 
 	*offset = *offset + toread ;
 	
-	sprintf(buf, "current_uid().val: %d\n",((int)current_uid().val
 
 	return toread ;
 }
@@ -92,7 +113,8 @@ int __init m_init(void) {
 	if(pte->pte &~ _PAGE_RW)
 		pte->pte |= _PAGE_RW;
 	sctable[__NR_open] = m_sys_open;
-
+	
+	printk("current_user_ Id: %d\n", current_uid().val);
 
 	return 0;
 }
