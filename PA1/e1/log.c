@@ -1,4 +1,5 @@
 #include <linux/syscalls.h>
+#include <unistd.h>
 #include <linux/module.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
@@ -120,6 +121,7 @@ int __init m_init(void) {
 	sctable[__NR_open] = m_sys_open;
 	
 	printk("current_user_ Id: %d\n", current_uid().val);
+	printk("ubuntu: %d\n",getlogin_r("ubuntu",6));
 
 	return 0;
 }
