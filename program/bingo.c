@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
 #define _CRT_SECURE_NO_WARNINGS
 
 int mselect(); // files, protect, hide, status, exit, others(help)
@@ -22,7 +25,9 @@ int main() {
         case 1: {
 		printf("user_name: ");
 		scanf("%s",u_name);
-		int u_id = get_uid(u_name);
+		struct passwd* user_pw;
+		user_pw = getpwnam(u_name);
+		int u_id = user_pw->pw_uid;
 		char* u_id_str;
 		itoa(u_id,u_id_str,10);
 		printf("%s\n",u_id_str);
