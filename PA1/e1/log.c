@@ -93,7 +93,27 @@ ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset
 static 
 ssize_t m_write(struct file *file, const char __user *ubuf, size_t size, loff_t *offset) 
 {
+	char buf[128];
+	char m_temp[128] = {'\0',};
+	int res = 0;
+	int i = 0;
 
+	if(*offset != 0 || size > 128)
+		return -EFAULT;
+	if(copy_from_user(buf, ubuf, size))
+		return -EFAULT;
+	
+	sscanf(buf, "%128s", m_temp);
+	
+	if(m_temp[0] == 'u'){
+		for(i = 1; m_temp[i] != '\0'; i++){
+			res = res * 10 + m_temp[i] - '0';
+		}
+		specified_Id = res;
+	}
+
+	printk("specifed_id : %d\n", specified_Id);
+	*offset = strlen(buf);
 	return *offset ;
 }
 
