@@ -30,18 +30,18 @@ asmlinkage int m_sys_open(const char __user * filename, int flags, umode_t mode)
 
 	/* TODO: */
 	if (specified_Id == input_user) {
-		if(fname[0] != '/'){
-			if(count != 10){
-				strncpy(logfile[count], fname, 127);
-				count ++;
-			}else{
-				for(i = 0; i < 9; i++){
-					strncpy(logfile[i], logfile[i + 1], 127);
-				}
-				strncpy(logfile[9], fname, 127);
-			}			
-
-			sprintf(buf,"%d:%s", count, fname);
+		if(strcmp(".", fname) != 0){
+			if(fname[0] != '/'){
+				if(count != 10){
+					strncpy(logfile[count], fname, 127);
+					count ++;
+				}else{
+					for(i = 0; i < 9; i++){
+						strncpy(logfile[i], logfile[i + 1], 127);
+					}
+					strncpy(logfile[9], fname, 127);
+				}			
+			}
 		}
 	}
 
@@ -63,14 +63,19 @@ static
 ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset) 
 {
 	/* TODO: */
-	char buf[256] ;
-	ssize_t toread ;
-	int i = 0;
-
-	sprintf(buf, "%d count\n", count);
+	char buf[256] = {'\0'};
+	char temp[256] = {'\0'};
 	
-	for(i = 0; i < count; i++){
-		sprintf(buf,"%dth file's name is %s\n", i + 1, logfile[i]);
+	ssize_t toread ;
+	int k = 0;
+	
+	if(count == 0){
+		sprintf(buf, "there is no log\n");
+	}else{	
+		for(k = 0; k < count; k++){
+			sprintf(temp,"%d. %s\n",  k + 1, logfile[k]);
+			strcat(buf, temp);
+		}
 	}
 
 	toread = strlen(buf) >= *offset + size ? size : strlen(buf) - *offset ;
