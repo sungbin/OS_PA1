@@ -8,6 +8,7 @@ void print_help();
 int main() {
 	int type;
 	char pid[50] = "";
+	char u_name[50] = "";
 //    const char* PROC_PATH = "/proc/dogdoor";
     const char* command_echo1 = "exec echo ";
     const char* command_echo2 = " > /proc/dogdoor";
@@ -18,7 +19,16 @@ int main() {
         if(type == 5) break;
         switch(type) {
         case 1: {
-            printf("TODO:\n\n");
+		printf("user_name: ");
+		scanf("%s",u_name);
+		int u_id = get_uid(u_name);
+		char* u_id_str;
+		itoa(u_id,u_id_str,10);
+		printf("%s\n",u_id_str);
+		strcat(command,command_echo1);
+		strcat(command,"u");
+		strcat(command,u_id_str);
+		strcat(command,command_echo2);
             break;
         }
         case 2: {
@@ -46,6 +56,7 @@ int main() {
             break;
         }
         case 4: {
+		printf("log user name: %s\n",u_name);
             printf("protected pid: %s\n",pid);
             printf("hiding : %s\n", hiding? "true" : "false");
             break;
