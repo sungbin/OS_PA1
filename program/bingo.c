@@ -40,6 +40,7 @@ int main() {
 			strcat(command,"u");
 			strcat(command,u_id_str);
 			strcat(command,command_echo2);
+			printf("%s\n",command);
 		}
 		else if(ss == 2) {
 			system(command_cat);
