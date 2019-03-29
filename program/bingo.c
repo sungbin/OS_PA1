@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #define _CRT_SECURE_NO_WARNINGS
 
 int mselect(); // files, protect, hide, status, exit, others(help)
