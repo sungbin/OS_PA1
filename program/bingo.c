@@ -28,8 +28,9 @@ int main() {
 		struct passwd* user_pw;
 		user_pw = getpwnam(u_name);
 		int u_id = user_pw->pw_uid;
-		char* u_id_str;
-		itoa(u_id,u_id_str,10);
+		char u_id_str[20];
+// 		itoa(u_id,u_id_str,10);
+		sprintf(u_id_str, "%d", u_id);
 		printf("%s\n",u_id_str);
 		strcat(command,command_echo1);
 		strcat(command,"u");
