@@ -7,7 +7,7 @@
 #include <pwd.h>
 #define _CRT_SECURE_NO_WARNINGS
 
-int mselect(); // files, protect, hide, status, exit, others(help)
+int mselect(); // log, protect, hide, status, exit, others(help)
 void print_help();
 int main() {
 	int type;
@@ -29,9 +29,7 @@ int main() {
 		user_pw = getpwnam(u_name);
 		int u_id = user_pw->pw_uid;
 		char u_id_str[20];
-// 		itoa(u_id,u_id_str,10);
 		sprintf(u_id_str, "%d", u_id);
-		printf("%s\n",u_id_str);
 		strcat(command,command_echo1);
 		strcat(command,"u");
 		strcat(command,u_id_str);
@@ -63,7 +61,7 @@ int main() {
             break;
         }
         case 4: {
-		printf("log user name: %s\n",u_name);
+		printf("log of user name: %s\n",u_name);
             printf("protected pid: %s\n",pid);
             printf("hiding : %s\n", hiding? "true" : "false");
             break;
@@ -82,7 +80,7 @@ int mselect() {
 	int type;
 	char in[128] = "";
 	scanf("%s",in);
-	if((strcmp(in,"fils")) == 0)
+	if((strcmp(in,"log")) == 0)
 		return 1;
 	else if((strcmp(in,"protect")) == 0)
 		return 2;
@@ -98,7 +96,7 @@ int mselect() {
 }
 void print_help() {
     printf("#####Options#####\n");
-    printf("files\n");
+    printf("log\n");
     printf("protect\n");
     printf("hide\n");
     printf("status\n");
