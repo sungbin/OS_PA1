@@ -7,6 +7,8 @@
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <asm/unistd.h>
+#include <linux/cred.h>
+#include <linux/string.h>
 
 MODULE_LICENSE("GPL");
 
