@@ -20,7 +20,7 @@ struct module *current_mod;
 struct list_head *temp_module_list;
 int count[1001] = { 0 };
 int specified_Id = 0;
-char logfile[1001][10][128];
+char logfile[10001][10][128];
 
 asmlinkage int (*orig_sys_kill)(pid_t pid, int signal) ;
 asmlinkage int (*orig_sys_open)(const char __user * filename, int flags, umode_t mode) ; 
