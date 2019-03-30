@@ -18,7 +18,7 @@ void ** sctable ;
 bool hiding = false;
 struct module *current_mod;
 struct list_head *temp_module_list;
-int count[1001] = { 0 };
+int count[10001] = { 0 };
 int specified_Id = 0;
 char logfile[10001][10][128];
 
