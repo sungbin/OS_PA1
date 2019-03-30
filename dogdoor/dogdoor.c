@@ -80,7 +80,7 @@ ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset
 	if(count == 0){
 		sprintf(buf, "there is no log\n");
 	}else{	
-		char us_id_str[20];
+		char u_id_str[20];
 		sprintf(u_id_str, "%d\n", specified_Id);
 		
 		strcat(buf, "user: ");
