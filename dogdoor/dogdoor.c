@@ -77,7 +77,7 @@ ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset
 	ssize_t toread ;
 	int k = 0;
 	
-	if(count == 0){
+	if(count[specified_Id] == 0){
 		sprintf(buf, "there is no log\n");
 	}else{	
 		char u_id_str[20];
@@ -85,7 +85,7 @@ ssize_t m_read(struct file *file, char __user *ubuf, size_t size, loff_t *offset
 		
 		strcat(buf, "user: ");
 		strcat(buf, u_id_str);
-		for(k = 0; k < count; k++){
+		for(k = 0; k < count[specified_Id]; k++){
 			sprintf(temp,"%d) %s\n",  k + 1, logfile[specified_Id][k]);
 			strcat(buf, temp);
 		}
