@@ -24,8 +24,8 @@ int main() {
         if(type == 5) break;
         switch(type) {
         case 1: {
-		printf("1. set user name\n");
-		printf("2. log\n");
+		printf("1) set user name\n");
+		printf("2) log\n");
 		int ss;
 		scanf("%d",&ss);
 		if(ss == 1) {
@@ -42,6 +42,7 @@ int main() {
 			strcat(command,command_echo2);
 //			printf("%s\n",command);
 			system(command);
+			system(command_cat);
 		}
 		else if(ss == 2) {
 			system(command_cat);
@@ -73,7 +74,7 @@ int main() {
             break;
         }
         case 4: {
-		printf("log of user name: %s\n",u_name);
+		printf("log user name: %s\n",u_name);
             printf("protected pid: %s\n",pid);
             printf("hiding : %s\n", hiding? "true" : "false");
             break;
@@ -82,36 +83,26 @@ int main() {
             print_help();
             break;
         } }
+	printf("\n");
     }
 	
 	return 0;
 }
 
 int mselect() {
+	print_help();
 	printf("Enter: ");
-	int type;
-	char in[128] = "";
-	scanf("%s",in);
-	if((strcmp(in,"log")) == 0)
-		return 1;
-	else if((strcmp(in,"protect")) == 0)
-		return 2;
-	else if((strcmp(in,"hide")) == 0)
-		return 3;
-	else if((strcmp(in,"status")) == 0)
-		return 4;
-	else if((strcmp(in,"exit")) == 0)
-		return 5;
-	else
-		return -1;
-	return -1;
+	int in = 0;
+	scanf("%d",&in);
+	printf("\n");
+	return in;
 }
 void print_help() {
     printf("#####Options#####\n");
-    printf("log\n");
-    printf("protect\n");
-    printf("hide\n");
-    printf("status\n");
-    printf("exit\n");
+    printf("1) log\n");
+    printf("2) protect p_id\n");
+    printf("3) hide\n");
+    printf("4) status\n");
+    printf("5) exit\n");
     printf("################\n\n");
 }
